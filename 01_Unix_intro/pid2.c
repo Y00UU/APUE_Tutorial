@@ -38,6 +38,7 @@ int main(void) {
 			err_sys("fork error");
 		}
 		*/
+
 		else if (pid == 0) {
 			printf("execute: %s\n", buf);
 			execlp(buf, buf, (char *) 0);
