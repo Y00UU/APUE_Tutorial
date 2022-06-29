@@ -19,12 +19,20 @@ int main(int argc, const char *argv[]) {
 	printf("no symbol for ARG_MAX\n");
 #endif
 
-
 #ifdef _SC_ARG_MAX
-	pr_sysconf("ARG_MAX = ", _SC_ARG_MAX);
+	pr_sysconf("ARG_MAX =", _SC_ARG_MAX);
 #else
 	printf("no symbol for _SC_ARG_MAX\n");
 #endif
+
+
+
+#ifdef _SC_CLK_TCK
+	pr_sysconf("CLK_TCK =", _SC_CLK_TCK);
+#else
+	printf("no symbol for _SC_CLK_TCK\n");
+#endif
+
 
 
 #ifdef MAX_CANON
@@ -33,14 +41,41 @@ int main(int argc, const char *argv[]) {
 	printf("no symbol for MAX_CANON\n");
 #endif
 
-
 #ifdef _PC_MAX_CANON
 	pr_pathconf("MAX_CANON = ", argv[1], _PC_MAX_CANON);
 #else
-	printf("no symbol for _PC_MAX_CANON");
+	printf("no symbol for _PC_MAX_CANON\n");
 #endif
 
-	
+
+
+
+#ifdef NAME_MAX
+	printf("NAME_MAX define = %ld\n", (long int) (NAME_MAX+0));
+#else
+	printf("no symbol for NAME_MAX\n");
+#endif
+
+#ifdef _PC_NAME_MAX
+	pr_pathconf("NAME_MAX =", argv[1], _PC_NAME_MAX );
+#else
+	printf("no symbol for _PC_NAME_MAX\n");
+#endif
+
+
+
+#ifdef PATH_MAX
+	printf("PATH_MAX define = %ld\n", (long int) (PATH_MAX+0));
+#else
+	printf("no symbol for PATH_MAX\n");
+#endif
+
+#ifdef _PC_PATH_MAX
+	pr_pathconf("PATH_MAX =", argv[1], _PC_PATH_MAX);
+#else
+	printf("no symbol for _PC_PATH_MAX\n");
+#endif
+
 
 	exit(0);
 }
