@@ -1,7 +1,7 @@
 #include "apue.h"
 #include <errno.h>
 
-void make_temp(char *template)
+void make_temp(char *template);
 
 int main(void) {
 
@@ -26,7 +26,7 @@ void make_temp(char *template) {
 	struct stat sbuf;
 
 
-	if ((fd = mkstemp(tempalte)) < 0)
+	if ((fd = mkstemp(template)) < 0)
 		err_sys("can't create temp file");
 
 	printf("temp name = %s\n", template);
