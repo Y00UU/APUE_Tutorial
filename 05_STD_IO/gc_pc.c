@@ -6,10 +6,13 @@ int main(void) {
 
 	int c;
 
-	while ((c = getc(stdin)) != EOF)
+	while ((c = getc(stdin)) != EOF) {
+		
+		// printf("put char\n");
+
 		if (putc(c, stdout) == EOF)
 			err_sys("output error");
-
+	}
 
 	if (ferror(stdin))
 		err_sys("input error");
