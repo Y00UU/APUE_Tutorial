@@ -12,25 +12,31 @@ int main(void) {
 		err_sys("fork error");
 
 	else if (pid == 0)
-		exit(7);
+		exit(0x1234);
 
 	if (wait(&status) != pid)
 		err_sys("wait error");
 	pr_exit(status);
 
+
+
+
 	if ((pid = fork()) < 0)
 		err_sys("fork error");
 	else if (pid == 0)
-		abort();
+		abort();				/* SIGABRT = 6*/
 
 	if (wait(&status) != pid)
 		err_sys("wait error");
 	pr_exit(status);
 
+
+
+
 	if ((pid = fork()) < 0)
 		err_sys("fork error");
 	else if (pid == 0)
-		status = 0;
+		status /= 0;				/* SIGFPE = 8 */
 
 	if (wait(&status) != pid)
 		err_sys("wait error");

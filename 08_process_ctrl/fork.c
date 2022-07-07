@@ -7,16 +7,16 @@ char buf[] = "a write to stdout\n";
 
 int main(void) {
 
-	int var;
+	int var, cnt;
 	pid_t pid;
 
 	var = 88;
-
+	cnt = 1;
 
 	if (write(STDOUT_FILENO, buf, sizeof(buf)-1) != sizeof(buf)-1)
 		err_sys("write error");
 
-	printf("before fork\n");
+	printf("before fork cnt: %d\n", cnt++);
 	// fflush(stdout);
 
 	if ((pid = fork()) < 0) {
