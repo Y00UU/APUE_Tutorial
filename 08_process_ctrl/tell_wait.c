@@ -12,12 +12,12 @@ int main(void) {
 		err_sys("fork error");
 	}
 	else if (pid == 0) {
+		WAIT_PARENT();
 		charatatime("output from child\n");
-		TELL_PARENT(getppid());
 	}
 	else {
-		WAIT_CHILD();
 		charatatime("output from parent\n");
+		TELL_CHILD(pid);
 	}
 	exit(0);
 }
