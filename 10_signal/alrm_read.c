@@ -20,6 +20,8 @@ int main(void) {
 		err_sys("read error");
 	alarm(0);
 
+	write(STDOUT_FILENO, line, n);
+
 	exit(0);
 }
 
