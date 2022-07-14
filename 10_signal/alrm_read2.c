@@ -1,5 +1,7 @@
 #include "apue.h"
+#include <setjmp.h>
 
+static jmp_buf env_alrm;
 
 static void sig_alrm(int);
 
@@ -13,7 +15,8 @@ int main(void) {
 	if (signal(SIGALRM, sig_alrm) == SIG_ERR)
 		err_sys("signal(SIGALRM) error");
 
-	
+	if (setjmp(env_alrm) != 0)
+		err_quit("read timeout");
 
 	printf("%%input:");
 	fflush(stdout);
@@ -30,5 +33,6 @@ int main(void) {
 static void sig_alrm(int signo) {
 
 	printf("sig_alrm (signo = %d), read I/O is timeout\n", signo);
-
+	
+	longjmp(env_alrm, 1);
 }
