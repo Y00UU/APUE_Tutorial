@@ -1,3 +1,4 @@
+#include "pr_sigprocmask.h"
 #include <stdio.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -10,12 +11,16 @@ static jmp_buf env_alrm;
 
 
 static void sig_alrm(int signo) {
+	
+	pr_mask("sig_alrm handler: ");
 
 	longjmp(env_alrm, 1);
 }
 
 
 static void sig_alrm_tmp(int signo) {
+
+	pr_mask("sig_alrm_tmp handler: ");
 
 	printf("sig_alrm_tmp: %d\n", signo);
 }
@@ -61,7 +66,7 @@ int main(int argc, const char *argv[]) {
 	unsigned int sleep_time;
 
 	if (argc != 3) {
-		printf("usage: ./a.out [seconds1] [seconds2]");
+		printf("usage: ./a.out [seconds1] [seconds2]\n");
 		return (0);
 	}	
 	else {
@@ -76,5 +81,7 @@ int main(int argc, const char *argv[]) {
 	
 	printf("proc(%ld) wake up\n", (long int)getpid());
 
+	pr_mask("ending sigprocmask: ");
+	
 	return 0;
 }

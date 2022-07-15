@@ -1,3 +1,4 @@
+#include "pr_sigprocmask.h"
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>

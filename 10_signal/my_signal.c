@@ -1,9 +1,6 @@
 #include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
 
 typedef void Sigfunc(int);
-
 
 
 Sigfunc *my_signal(int signo, Sigfunc *func) {
@@ -30,22 +27,3 @@ Sigfunc *my_signal(int signo, Sigfunc *func) {
 	return (oact.sa_handler);
 }
 
-
-static void sig_alrm(int signo) {
-	printf("signal alarm\n");
-}
-
-
-int main(void) {
-
-
-	if (my_signal(SIGALRM, sig_alrm) < 0)
-		printf("my_signal error\n");
-	
-	printf("sleep 5s...\n");
-	alarm(5);
-	pause();	
-	printf("wake up\n");
-
-	return 0;
-}
