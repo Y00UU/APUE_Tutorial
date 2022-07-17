@@ -1,6 +1,6 @@
 #include "apue.h"
 #include <pwd.h>
-
+#include <unistd.h>
 
 
 static void my_alarm(int signo) {
@@ -14,13 +14,12 @@ static void my_alarm(int signo) {
 	else
 		printf("signal get pw_name = %s\n", rootptr->pw_name);
 	
-	alarm(1);
+	alarm(3);
 }
 
 
 
-
-
+#define PW_NAME "ryanlu"
 
 
 int main(void) {
@@ -29,15 +28,17 @@ int main(void) {
 
 	signal(SIGALRM, my_alarm);
 
-	alarm(1);
+	alarm(3);
 
 	while (1) {
 		
-		if ((ptr = getpwnam("ryan")) == NULL)
+		if ((ptr = getpwnam(PW_NAME)) == NULL)
 			err_sys("getpwnam error");
 
-		if (strcmp(ptr->pw_name, "ryan") != 0)
+		if (strcmp(ptr->pw_name, PW_NAME) != 0)
 			printf("return value corrupted!, pw_name = %s\n", ptr->pw_name);
+		
+		// sleep(1);
 	}
 }
 

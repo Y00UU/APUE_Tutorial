@@ -36,8 +36,10 @@ unsigned int sleep5(unsigned int seconds) {
 
 	signal(SIGALRM, sigfunc);
 
-	if (last_sec > seconds)
-		last_sec = alarm(last_sec-seconds);
+	if (last_sec > seconds) {
+		last_sec -= seconds;
+		alarm(last_sec);
+	}
 	else
 		last_sec = (alarm(0));
 	
