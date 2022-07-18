@@ -1,13 +1,11 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
-
 static void sig_sleep_handler(int signo) {
 	printf("in sig_sleep_handler ret\n");
 }
 
-static unsigned int my_sleep(unsigned int slp_sec) {
+unsigned int sys_sleep3(unsigned int slp_sec) {
 	struct sigaction newact, oldact;
 	sigset_t newmask, oldmask, suspendmask;
 	unsigned int unslp_sec, alrm_sec;
@@ -53,44 +51,3 @@ static unsigned int my_sleep(unsigned int slp_sec) {
 	return (unslp_sec);
 }
 
-static void sig_alrm(int signo) {
-	printf("in sig_alrm handler ret\n");
-}
-
-static void sig_usr1(int signo) {
-	printf("in sig_uar1 handler ret\n");
-}
-
-
-int main(int argc, const char *argv[]) {
-
-	unsigned int unslept, alrm_sec;
-
-	int i, j;
-	volatile int k;
-
-	if (argc != 3) {
-		printf("usage: ./a.out t1 t2\n");
-		return 1;
-	}
-	
-	alrm_sec = atoi(argv[1]);
-	unslept = atoi(argv[2]);
-
-	signal(SIGALRM, sig_alrm);
-	signal(SIGUSR1, sig_usr1);
-
-	alarm(alrm_sec);
-
-	printf("sleep %us...\n", unslept);
-	unslept = my_sleep(unslept);
-	printf("wake up, unslept = %u\n", unslept);
-
-	for (i = 0; i < 1000000; ++i)
-		for (j = 0; j < 10000; ++j)
-			k += i * j;
-	
-	printf("ending proc\n");
-
-	return 0;
-}

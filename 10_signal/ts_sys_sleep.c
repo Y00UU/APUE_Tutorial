@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 static void sig_alrm(int signo) {
@@ -12,11 +13,19 @@ static void sig_usr1(int signo) {
 }
 
 
-int main(void) {
+int main(int argc, const char *argv[]) {
 
-	unsigned int unslept = 25, alrm_sec = 15;
+	unsigned int unslept, alrm_sec;
 	int i, j;
 	volatile int k;
+
+	if (argc != 3) {
+		printf("usage: ./a.out t1 t2");
+		return 1;
+	}
+
+	alrm_sec = atoi(argv[1]);
+	unslept = atoi(argv[2]);
 
 	signal(SIGALRM, sig_alrm);
 	signal(SIGUSR1, sig_usr1);

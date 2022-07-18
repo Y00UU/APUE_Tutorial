@@ -1,6 +1,19 @@
 #include "apue.h"
-#include "sleep2.h"
+
+//#define SYS_SLP2
+//#define SYS_SLP3
+
+#ifdef SYS_SLP2
+extern unsigned int sys_sleep2(unsigned int);
+
+#elif SYS_SLP3
+extern unsigned int sys_sleep3(unsigned int);
+
+#else
 #include <unistd.h>
+
+#endif
+
 
 static void sig_int(int);
 
@@ -13,10 +26,15 @@ int main(void) {
 	if (signal(SIGINT, sig_int) == SIG_ERR)
 		err_sys("signal(SIGINT) error");
 
-	//unslept = sleep2(5);
-	unslept = sleep(5);	
-
-	printf("sleep2 retruned: %u\n", unslept);
+	unslept = 
+#if defined(SYS_SLP2)
+	sys_sleep2(5);
+#elif defined(SYS_SLP3)
+	sys_sleep3(5);
+#else
+	sleep(5);
+#endif
+	printf("sys_sleep retruned: %u\n", unslept);
 
 	exit(0);
 }
