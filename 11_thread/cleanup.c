@@ -1,6 +1,6 @@
 #include "apue.h"
 #include <pthread.h>
-#include <unistd.h>
+// #include <unistd.h>
 
 
 void cleanup(void *arg) {
@@ -11,11 +11,11 @@ void *thr_fn1(void *arg) {
 	printf("thread 1 start\n");
 	pthread_cleanup_push(cleanup, "thread 1 first handler");
 	pthread_cleanup_push(cleanup, "thread 1 second handler");
-	printf("thread 1 push complete\n");
-	fflush(stdout);
+ 	printf("thread 1 push complete\n");
+//	fflush(stdout);
 
-	if (arg) 
-		return ((void *) 1);
+ 	if (arg) 
+ 		return ((void *) 1);
 
 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
@@ -27,7 +27,7 @@ void *thr_fn2(void *arg) {
 	pthread_cleanup_push(cleanup, "thread 2 first handler");
 	pthread_cleanup_push(cleanup, "thread 2 second handler");
 	printf("thread 2 push complete\n");
-	fflush(stdout);
+//	fflush(stdout);
 
 	if (arg) 
 		pthread_exit(((void *) 2));
@@ -37,6 +37,7 @@ void *thr_fn2(void *arg) {
 	pthread_exit(((void *) 2));
 }
 
+#if 0
 void *thr_fn3(void *arg) {
 	printf("thread 3 start\n");
 	pthread_cleanup_push(cleanup, "thread 3 first handler");
@@ -77,13 +78,14 @@ void *thr_fn4(void *arg) {
 
 	return ((void *) 4);
 }
+#endif
 
 int main(void) {
 
 	int err;
 	pthread_t tid1, tid2, tid3, tid4;
 	void *tret;
-
+printf("create thread start\n");
 	err = pthread_create(&tid1, NULL, thr_fn1, (void *) (1));
 	if (err != 0)
 		err_exit(err, "can't create thread 1");
@@ -93,8 +95,7 @@ int main(void) {
 		err_exit(err, "can't create thread 2");
 
 
-
-
+#if 0
 	err = pthread_join(tid1, &tret);
 	if (err != 0)
 		err_exit(err, "can't join with thread 1");
@@ -107,7 +108,6 @@ int main(void) {
 	
 
 
-
 	err = pthread_create(&tid3, NULL, thr_fn3, NULL);
 	if (err != 0)
 		err_exit(err, "can't create thread 3");
@@ -116,7 +116,6 @@ int main(void) {
 	if (err != 0)
 		err_exit(err, "can't join with thread 3");
 	printf("thread 3 exit code %ld\n", (long int) tret);
-/*
 
 
 	err = pthread_create(&tid4, NULL, thr_fn4, (void *) (1));
@@ -128,8 +127,7 @@ int main(void) {
 		err_exit(err, "can't join with thread 4");
 	printf("thread 4 exit code %ld\n", (long int) tret);
 
-*/
-
+#endif
 	exit(0);
 }
 
