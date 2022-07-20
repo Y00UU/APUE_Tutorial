@@ -69,6 +69,8 @@ int main(int argc, const char *argv[]) {
 	int i, j;
 	volatile int k;
 
+	sigset_t zeromask;
+
 	if (argc != 3) {
 		printf("usage: ./a.out t1 t2\n");
 		return 1;
@@ -85,12 +87,12 @@ int main(int argc, const char *argv[]) {
 	printf("sleep %us...\n", unslept);
 	unslept = my_sleep(unslept);
 	printf("wake up, unslept = %u\n", unslept);
-
-	for (i = 0; i < 1000000; ++i)
-		for (j = 0; j < 10000; ++j)
-			k += i * j;
 	
-	printf("ending proc\n");
+	printf("wait the alarm signal: ");
+	fflush(stdout);
+	sigemptyset(&zeromask);
+	sigsuspend(&zeromask);
+	printf("program ending\n");
 
 	return 0;
 }
