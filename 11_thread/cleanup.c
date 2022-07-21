@@ -3,6 +3,8 @@
 // #include <unistd.h>
 
 
+void *thr_fn4(void *arg);
+
 void cleanup(void *arg) {
 	printf("cleanup: %s\n", (char *) arg);
 }
@@ -12,10 +14,10 @@ void *thr_fn1(void *arg) {
 	pthread_cleanup_push(cleanup, "thread 1 first handler");
 	pthread_cleanup_push(cleanup, "thread 1 second handler");
  	printf("thread 1 push complete\n");
-//	fflush(stdout);
+	fflush(stdout);
 
- 	if (arg) 
- 		return ((void *) 1);
+	if (arg) 
+		return ((void *) 1);
 
 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
@@ -27,17 +29,16 @@ void *thr_fn2(void *arg) {
 	pthread_cleanup_push(cleanup, "thread 2 first handler");
 	pthread_cleanup_push(cleanup, "thread 2 second handler");
 	printf("thread 2 push complete\n");
-//	fflush(stdout);
+	fflush(stdout);
 
-	if (arg) 
+	if (arg)
 		pthread_exit(((void *) 2));
-
+	
+ 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
-	pthread_cleanup_pop(0);
-	pthread_exit(((void *) 2));
+ 	pthread_exit(((void *) 2));
 }
 
-#if 0
 void *thr_fn3(void *arg) {
 	printf("thread 3 start\n");
 	pthread_cleanup_push(cleanup, "thread 3 first handler");
@@ -55,29 +56,7 @@ void *thr_fn3(void *arg) {
 	return ((void *) 3);
 }
 
-void *thr_fn4(void *arg) {
-	printf("thread 4 start\n");
-	pthread_cleanup_push(cleanup, "thread 4 first handler");
-	pthread_cleanup_push(cleanup, "thread 4 second handler");
-	printf("thread 4 push complete\n");
-	fflush(stdout);
-
-	sleep(5);
-	
-	if (arg) {
-		//pthread_testcancel();
-		printf("arg not null, thread cancel at cancel pointer\n");
-		fflush(stdout);
-		return ((void *) 4);
-	}
-
-	printf("arg not null, thread cancel at ending program\n");
-	fflush(stdout);
-
-	//while (1);
-
-	return ((void *) 4);
-}
+#if 0
 #endif
 
 int main(void) {
@@ -85,7 +64,9 @@ int main(void) {
 	int err;
 	pthread_t tid1, tid2, tid3, tid4;
 	void *tret;
-printf("create thread start\n");
+	
+	printf("create thread start\n");
+	
 	err = pthread_create(&tid1, NULL, thr_fn1, (void *) (1));
 	if (err != 0)
 		err_exit(err, "can't create thread 1");
@@ -94,8 +75,23 @@ printf("create thread start\n");
 	if (err != 0)
 		err_exit(err, "can't create thread 2");
 
+	err = pthread_create(&tid3, NULL, thr_fn3, NULL);
+	if (err != 0)
+		err_exit(err, "can't create thread 3");
 
-#if 0
+	/* err = pthread_create(&tid4, NULL, thr_fn4, (void *) (1)); */
+	/* if (err != 0) */
+		/* err_exit(err, "can't create thread 4"); */
+	
+
+
+
+
+
+
+
+
+
 	err = pthread_join(tid1, &tret);
 	if (err != 0)
 		err_exit(err, "can't join with thread 1");
@@ -106,28 +102,35 @@ printf("create thread start\n");
 		err_exit(err, "can't join with thread 2");
 	printf("thread 2 exit code %ld\n", (long int) tret);
 	
-
-
-	err = pthread_create(&tid3, NULL, thr_fn3, NULL);
-	if (err != 0)
-		err_exit(err, "can't create thread 3");
-	
 	err = pthread_join(tid3, &tret);
 	if (err != 0)
 		err_exit(err, "can't join with thread 3");
 	printf("thread 3 exit code %ld\n", (long int) tret);
 
+	// err = pthread_join(tid4, &tret);
+	// if (err != 0)
+		// err_exit(err, "can't join with thread 4");
+	// printf("thread 4 exit code %ld\n", (long int) tret);
 
-	err = pthread_create(&tid4, NULL, thr_fn4, (void *) (1));
-	if (err != 0)
-		err_exit(err, "can't create thread 4");
-	
-	err = pthread_join(tid4, &tret);
-	if (err != 0)
-		err_exit(err, "can't join with thread 4");
-	printf("thread 4 exit code %ld\n", (long int) tret);
 
+
+#if 0
 #endif
+	
+	
 	exit(0);
+
+}
+void *thr_fn4(void *arg) {
+	printf("thread 4 start\n");
+	pthread_cleanup_push(cleanup, "thread 4 first handler");
+	pthread_cleanup_push(cleanup, "thread 4 second handler");
+	printf("thread 4 push complete\n");
+	fflush(stdout);
+
+	if (arg) 
+		return ((void *) 4);
+
+	return ((void *) 4);
 }
 
