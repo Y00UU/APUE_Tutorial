@@ -60,30 +60,45 @@ void *thr_fn3(void *arg) {
 
 
 static void *thr_fn4(void *arg) {
-	printf("thread 4 start\n");
+
+	int is_add_pot = 0;
+
+	// printf("thread 4 start\n");
 	pthread_cleanup_push(cleanup, "thread 4 first handler");
 	pthread_cleanup_push(cleanup, "thread 4 second handler");
-	printf("thread 4 push complete\n");
-	fflush(stdout);
+	// printf("thread 4 push complete\n");
+	// fflush(stdout);
 	
-	printf("thread 4 sleep 5s...\n");
-	fflush(stdout);
-	sleep(5);
-	printf("thread 4 wake up\n");
-	fflush(stdout);
-
-	if (arg) {
-		pthread_testcancel();
-		printf("testcancel is run\n");
-		pthread_exit((void *) 4);
+	while (1) {
+		if (arg) {
+			// printf("testcancel is run\n");
+			pthread_testcancel();
+			// printf("testcancel is stop\n");
+			// pthread_exit((void *) 4);
+		}
+		else {
+			if (!is_add_pot) {
+				printf("call printf to add a thread cancel point\n");
+				is_add_pot = 1;
+			}
+			fflush(NULL);
+		}
 	}
 
-	printf("thread is start tocalling cleanup\n");
-	fflush(stdout);
+	// printf("thread 4 sleep 5s...\n");
+	// fflush(stdout);
+	// sleep(5);
+	// printf("thread 4 wake up\n");
+
+	// printf("thread is start to calling cleanup\n");
+	// fflush(stdout);
 
 	pthread_cleanup_pop(0);
 	pthread_cleanup_pop(0);
-	return ((void *) 4);
+	// return ((void *) 4);
+	
+	pthread_exit((void *) 4);
+
 }
 
 
@@ -91,7 +106,7 @@ static void *thr_fn4(void *arg) {
 
 int main(void) {
 
-	int err, oldtype;
+	int err, oldstate, oldtype;
 	pthread_t tid1, tid2, tid3, tid4;
 	void *tret;
 	
@@ -128,20 +143,27 @@ int main(void) {
 
 
 
-
+	
 	err = pthread_create(&tid4, NULL, thr_fn4, (void *) (1));
 	if (err != 0)
 		err_exit(err, "can't create thread 4");
 	
+	// err = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+	// if (err != 0)
+		// err_exit(err, "pthread_setcancelstate error");
+	// printf("oldstate = %d\n", oldstate);
+
 	// err = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype);
-	if (err != 0)
-		err_exit(err, "pthread_setcanceltype error");
-	
+	// if (err != 0)
+		// err_exit(err, "pthread_setcanceltype error");
+	// printf("oldtype = %d\n", oldtype);
+
 	sleep(2);
 
 	err = pthread_cancel(tid4);
 	if (err != 0)
 		err_exit(err, "can't cancel thread 4");
+
 
 	err = pthread_join(tid4, &tret);
 	if (err != 0)
