@@ -1,3 +1,4 @@
+#include "pthread_barrier.h"
 #include "apue.h"
 #include <pthread.h>
 #include <limits.h>
@@ -8,12 +9,12 @@
 #define NUMNUM	(8000000L)
 #define TNUM	(NUMNUM/NTHR)
 
-i
+
 long int nums[NUMNUM];
 long int snums[NUMNUM];
 
 
-pthread_barrier_t b;
+static pthread_barrier_t b;
 
 
 #ifdef SOLARIS
@@ -66,7 +67,7 @@ void merge(void) {
 				minidx = i;
 			}
 		}
-		sums[sidx] = nums[idx[minidx]];
+		snums[sidx] = nums[idx[minidx]];
 		idx[minidx]++;
 	}
 }
@@ -75,7 +76,7 @@ void merge(void) {
 int main(void) {
 
 	unsigned long int i;
-	struct timval start, end;
+	struct timeval start, end;
 	long long startusec, endusec;
 	double elapsed;
 	int err;
@@ -100,11 +101,11 @@ int main(void) {
 	gettimeofday(&end, NULL);
 
 	startusec = start.tv_sec * 1000000 + start.tv_usec;
-	endsec = end.tv_sec * 1000000 + end.tv_usec;
+	endusec = end.tv_sec * 1000000 + end.tv_usec;
 	elapsed = (double) (endusec - startusec) / 1000000.0;
 	printf("sort took %.4f seconds\n", elapsed);
 	for (i = 0; i < NUMNUM; ++i)
-		printf("ld\n", snums[i]);
+		printf("%ld\n", snums[i]);
 	
 	exit(0);
 }
