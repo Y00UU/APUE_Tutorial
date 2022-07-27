@@ -1,8 +1,13 @@
+#if defined(__APPLE__)
 #include "pthread_barrier.h"
+
+#endif
+
 #include "apue.h"
 #include <pthread.h>
 #include <limits.h>
 #include <sys/time.h>
+#include <stdlib.h>
 
 
 #define NTHR	(8)
@@ -17,7 +22,8 @@ long int snums[NUMNUM];
 static pthread_barrier_t b;
 
 
-#ifdef SOLARIS
+#if defined(SOLARIS) || defined(__linux__)
+/* extern int qsort(void *, size_t, size_t, int (*)(const void *, const void *)); */
 #define heapsort	qsort
 
 #else
@@ -104,8 +110,8 @@ int main(void) {
 	endusec = end.tv_sec * 1000000 + end.tv_usec;
 	elapsed = (double) (endusec - startusec) / 1000000.0;
 	printf("sort took %.4f seconds\n", elapsed);
-	for (i = 0; i < NUMNUM; ++i)
-		printf("%ld\n", snums[i]);
+	// for (i = 0; i < NUMNUM; ++i)
+		// printf("%ld\n", snums[i]);
 	
 	exit(0);
 }

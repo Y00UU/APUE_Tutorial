@@ -1,18 +1,11 @@
+#include "cond_t_mutex.h"
 #include <pthread.h>
 
+static struct msg *workq;
 
-struct msg {
-	
-	struct msg *m_next;
+static pthread_cond_t qready = PTHREAD_COND_INITIALIZER;
 
-};
-
-
-struct msg *workq;
-
-pthread_cond_t qready = PTHREAD_COND_INITIALIZER;
-
-pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
 
 
 void process_msg(void) {
