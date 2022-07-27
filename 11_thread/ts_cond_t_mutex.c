@@ -1,20 +1,21 @@
 #include "cond_t_mutex.h"
 #include "apue.h"
+#include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define NTHR	(8)
+static struct msg msg_list[NTHR];
 
 
 static void *proc_task(void *arg) {
-
-	while (1) {
 	
-		process_msg();
-	
-		sleep(1);
-	}
+	printf("proc_task is running...\n");
 
+	// sleep(1);
+	
+	process_msg();
 	
 	pthread_exit((void *) 2);
 }
@@ -22,13 +23,13 @@ static void *proc_task(void *arg) {
 static void *enqueue_task(void *arg) {
 
 	int i;
-
-	struct msg msg_list[NTHR];
-
-	for (i = 0; i < NTHR; ++i)
-		
 	
+	// sleep(1);
 
+	for (i = 0; i < NTHR; ++i) {
+		msg_list[i].job_id = (long int) i;
+		enqueue_msg(&msg_list[i]);
+	}
 
 	pthread_exit((void *) 1);
 }
@@ -41,7 +42,7 @@ int main(void) {
 	pthread_t tid_process, tid_enqueue;
 	int err;
 	
-	err = pthread_crete(&tid_process, NULL, proc_task, NULL);
+	err = pthread_create(&tid_process, NULL, proc_task, NULL);
 	if (err != 0)
 		err_exit(err, "can't crate thread process");
 

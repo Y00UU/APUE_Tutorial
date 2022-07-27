@@ -1,10 +1,10 @@
 #include "cond_t_mutex.h"
 #include <pthread.h>
+#include <stdio.h>
+
 
 static struct msg *workq;
-
 static pthread_cond_t qready = PTHREAD_COND_INITIALIZER;
-
 static pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -20,10 +20,12 @@ void process_msg(void) {
 			pthread_cond_wait(&qready, &qlock);
 
 		mp = workq;
-
 		workq = mp->m_next;
-
 		pthread_mutex_unlock(&qlock);
+
+		/* new pocess the message mp */
+		printf("job_id = %ld\n", mp->job_id);
+		fflush(stdout);
 	}
 }
 

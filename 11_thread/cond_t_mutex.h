@@ -4,7 +4,8 @@
 struct msg {
 	
 	struct msg *m_next;
-
+	
+	long int job_id;
 };
 
 
