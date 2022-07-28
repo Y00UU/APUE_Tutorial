@@ -24,7 +24,7 @@ static void *enqueue_task(void *arg) {
 
 	int i;
 	
-	// sleep(1);
+	sleep(1);
 
 	for (i = 0; i < NTHR; ++i) {
 		msg_list[i].job_id = (long int) i;
