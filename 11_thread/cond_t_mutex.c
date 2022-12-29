@@ -24,7 +24,7 @@ void process_msg(void) {
 		pthread_mutex_unlock(&qlock);
 
 		/* new pocess the message mp */
-		printf("job_id = %ld\n", mp->job_id);
+		printf("process a job, job_id = %ld\n", mp->job_id);
 		fflush(stdout);
 	}
 }
